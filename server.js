@@ -7,10 +7,12 @@ const app = express();
 
 app.use(cors())
 
+app.get('/', (req, res) => {
+    res.send("Server Running - For news data go to /news")
+})
+
 app.get('/news', async (req, res) => {
-    try{
-        console.log("Delay");
-        
+    try{        
     const { country = 'in', category = 'top', q, page } = req.query
 
     const URL = `https://newsdata.io/api/1/latest?apikey=${process.env.API2}&language=en&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`;
