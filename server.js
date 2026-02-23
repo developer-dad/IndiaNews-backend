@@ -9,6 +9,8 @@ app.use(cors())
 
 app.get('/news', async (req, res) => {
     try{
+        console.log("Delay");
+        
     const { country = 'in', category = 'top', q, page } = req.query
 
     const URL = `https://newsdata.io/api/1/latest?apikey=${process.env.API2}&language=en&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`;
