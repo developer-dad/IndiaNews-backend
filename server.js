@@ -44,7 +44,7 @@ app.get("/news", async (req, res) => {
       rotateApiKey();
       apiKey = getApiKey();
 
-      URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`
+      URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&size=9&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`
       data = await fetch(URL);
       parsedData = await data.json();
     }
