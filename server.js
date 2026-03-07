@@ -35,7 +35,7 @@ app.get("/news", async (req, res) => {
 
     const { country = "in", category = "top", q, page } = req.query;
 
-    let URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`;
+    let URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&size=9&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`;
 
     let data = await fetch(URL);
     let parsedData = await data.json();
