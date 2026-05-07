@@ -1,61 +1,29 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
-const app = express();
+import express from 'express'
+import cors from 'cors'
 
-const API_KEY = [
-  process.env.API1,
-  process.env.API2,
-  process.env.API3,
-  process.env.API4,
-];
+import connectDB from "./config/connectDB.js";
+import newsRouter from './routes/news.route.js'
+import savedRouter from "./routes/savedNews.route.js";
+import userRouter from "./routes/user.route.js";
 
-let currentKeyIndex = 0;
+const app = express()
 
-const getApiKey = () => {
-  return API_KEY[currentKeyIndex];
-};
+app.use(cors())
+app.use(express.json())
 
-const rotateApiKey = () => {
-  currentKeyIndex = (currentKeyIndex + 1) % API_KEY.length;
-  console.log(`API key changes to ${currentKeyIndex}`);
-};
+// Fetch News from NewsData.io
+app.use('/api/v1/news', newsRouter)
 
-app.use(cors());
+// Fetch, Create or Remove News from Saved News collection on MongoDB
+app.use('/api/v1/save', savedRouter)
 
-app.get("/", (req, res) => {
-  res.send("Server Running - For news data go to /news");
-});
+// login, signup, sendotp and resetpassword for a user
+app.use('/api/v1/user', userRouter)
 
-app.get("/news", async (req, res) => {
-  try {
-    let apiKey = getApiKey();
-
-    const { country = "in", category = "top", q, page } = req.query;
-
-    let URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&size=9&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`;
-
-    let data = await fetch(URL);
-    let parsedData = await data.json();
-
-    if (parsedData.status === "error") {
-      rotateApiKey();
-      apiKey = getApiKey();
-
-      URL = `https://newsdata.io/api/1/latest?apikey=${apiKey}&language=en&size=9&country=${country}&category=${category}${q ? `&q=${q}` : ""}${page ? `&page=${page}` : ""}`
-      data = await fetch(URL);
-      parsedData = await data.json();
-    }
-
-    res.json(parsedData);
-  } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080 
 app.listen(PORT, () => {
-  console.log(`Server listning on http://localhost:${PORT}`);
-});
+    connectDB()
+    console.log(`Server Listning on http://localhost:${PORT}`);  
+})
