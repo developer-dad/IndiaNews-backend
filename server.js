@@ -10,7 +10,14 @@ import userRouter from "./routes/user.route.js";
 
 const app = express()
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    // "https://your-frontend-domain.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true
+}));
 app.use(express.json())
 
 // Fetch News from NewsData.io

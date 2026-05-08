@@ -10,8 +10,7 @@ export const saveNews = async (req, res) => {
       image_url,
       source,
       link,
-      pubDate,
-      userID,
+      pubDate
     } = req.body;
 
     // Validate article_id
