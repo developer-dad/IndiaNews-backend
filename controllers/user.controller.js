@@ -61,10 +61,11 @@ export const signup = async (req, res) => {
       data: userData,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
@@ -128,10 +129,11 @@ export const login = async (req, res) => {
       data: userData,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
@@ -142,11 +144,11 @@ export const sendOTPController = async (req, res) => {
     const { email } = req.body;
 
     // Validate email
-    if(!email){
+    if (!email) {
       return res.status(400).json({
         success: false,
-        message: "Email is Required"
-      })
+        message: "Email is Required",
+      });
     }
 
     // Check Exists
@@ -173,10 +175,11 @@ export const sendOTPController = async (req, res) => {
       message: "OTP sent successfully",
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
@@ -233,10 +236,11 @@ export const resetPassword = async (req, res) => {
       message: "Password Reset Successful",
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };

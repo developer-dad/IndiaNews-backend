@@ -52,10 +52,11 @@ export const saveNews = async (req, res) => {
       data: news,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
@@ -92,10 +93,11 @@ export const removeNews = async (req, res) => {
       message: "Saved News successfully removed",
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
@@ -112,10 +114,11 @@ export const getSavedNews = async (req, res) => {
       data: news,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      data: error,
+      message: error.message,
     });
   }
 };
