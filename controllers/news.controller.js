@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import { getApiKey, rotateApiKey } from "../utils/APIRotation.js";
 
+// Controller to Fetch News from the NewsData.io
 export const fetchNews = async (req, res) => {
 try {
       let apiKey = getApiKey();
@@ -28,7 +29,8 @@ try {
 } catch (error) {
     res.status(500).json({
         success: false,
-        message: "Error Fetching News"
+        message: "Error Fetching News",
+        data: error
     })
 }
 };

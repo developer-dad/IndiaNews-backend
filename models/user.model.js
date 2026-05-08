@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema({
     otpExpiry: {
         type: Date
     }
+}, {
+    timestamps: true
 })
 
 const User = mongoose.model("User", userSchema)

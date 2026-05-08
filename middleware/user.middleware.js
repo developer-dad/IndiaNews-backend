@@ -18,10 +18,11 @@ try {
         req.user = decoded
         
         next()
-} catch (err) {
+} catch (error) {
     return res.status(401).json({
         success: false,
-        message: "Invalid or Expired token"
+        message: "Invalid or Expired token",
+        data: error
     })
 }
 }

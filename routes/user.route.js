@@ -3,16 +3,16 @@ import { login, resetPassword, sendOTPController, signup } from "../controllers/
 
 const userRouter = express.Router()
 
-// Create a new User => SignUp
+// Create a new User => api/v1/user/signup
 userRouter.post('/signup', signup)
 
-// LogIn existing User
+// LogIn existing User => api/v1/user/login
 userRouter.post('/login', login)
 
-// Send OTP using NodeMailer
+// Send OTP using NodeMailer => api/v1/user/send-otp
 userRouter.post('/send-otp', sendOTPController)
 
-// Reset Password using NodeMailer
+// Reset Password using NodeMailer => api/v1/user/reset-password
 userRouter.post('/reset-password', resetPassword)
 
 export default userRouter

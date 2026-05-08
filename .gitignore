@@ -1,7 +1,2 @@
-<<<<<<< HEAD
-/node_modules
-.env
-=======
 .env
 node_modules
->>>>>>> 5cdd4cd (first commit)

@@ -68,7 +68,8 @@ export const signup = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal Server Error",
+      data: error
     });
   }
 };
@@ -133,10 +134,11 @@ export const login = async (req, res) => {
       message: "Token Created Successfully",
       data: userData,
     });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({
       success: false,
-      message: err.message,
+      message: "Internal Server Error",
+      data: error
     });
   }
 };
@@ -168,10 +170,11 @@ try {
       success: true,
       message: "OTP sent successfully"
     })
-} catch (err) {
+} catch (error) {
   res.status(500).json({
     success: false,
-    message: "Something went wrong"
+    message: "Internal Server Error",
+    data: error
   })
 }
 };
@@ -198,7 +201,7 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    if (user.otp !== otp.toString()) {
+    if (user.otp !== otp) {
       return res.status(400).json({
         success: false,
         message: "Incorrect OTP"
@@ -228,11 +231,11 @@ export const resetPassword = async (req, res) => {
       message: "Password Reset Successful"
     });
 
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Internal Server Error"
+      message: "Internal Server Error",
+      data: error
     });
   }
 };
