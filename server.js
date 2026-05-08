@@ -22,8 +22,9 @@ app.use('/api/v1/save', savedRouter)
 // login, signup, sendotp and resetpassword for a user
 app.use('/api/v1/user', userRouter)
 
+connectDB()
+
 const PORT = process.env.PORT || 8080 
 app.listen(PORT, () => {
-    connectDB()
     console.log(`Server Listning on http://localhost:${PORT}`);  
 })
