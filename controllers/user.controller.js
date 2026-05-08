@@ -9,12 +9,8 @@ export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Normalise name and email
-    const normName = name.trim().toLowerCase();
-    const normEmail = email.trim().toLowerCase();
-
     // Validate
-    if (!normName || !password || !normEmail) {
+    if (!name || !password || !email) {
       return res.status(400).json({
         success: false,
         message: "All Fields are Required",
@@ -30,7 +26,7 @@ export const signup = async (req, res) => {
     }
 
     // Check existing
-    const existing = await User.findOne({ email: normEmail });
+    const existing = await User.findOne({ email });
     if (existing) {
       return res.status(400).json({
         success: false,
@@ -44,8 +40,8 @@ export const signup = async (req, res) => {
 
     // Save to DataBase
     const user = await User.create({
-      name: normName,
-      email: normEmail,
+      name,
+      email,
       password: hashPassword,
     });
 
@@ -79,11 +75,9 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // normailze email
-    const normEmail = email.trim().toLowerCase();
 
     // validate
-    if (!normEmail || !password) {
+    if (!email || !password) {
       return res.status(400).json({
         success: false,
         message: "Email and password are required",
@@ -99,7 +93,7 @@ export const login = async (req, res) => {
     }
 
     // check email exists
-    const user = await User.findOne({ email: normEmail });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({
         success: false,
