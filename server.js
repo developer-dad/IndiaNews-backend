@@ -10,16 +10,7 @@ import userRouter from "./routes/user.route.js";
 
 const app = express()
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://indianews-flame.vercel.app/",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(express.json())
 
 // Fetch News from NewsData.io
