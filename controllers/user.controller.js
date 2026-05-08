@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import sendOTP from "../utils/sendOTP.js";
 
-
 // Controller to Create a new user => SignUp
 export const signup = async (req, res) => {
   try {
@@ -18,7 +17,7 @@ export const signup = async (req, res) => {
     }
 
     // Password length verification
-    if (password.length < 6) {
+    if (password.length <= 6) {
       return res.status(401).json({
         success: false,
         message: "Password must be more then 6 letters",
@@ -55,26 +54,25 @@ export const signup = async (req, res) => {
 
     const { password: _, ...userData } = user._doc;
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       accessToken: accessToken,
       message: "User Created Successfully",
       data: userData,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: error
+      data: error,
     });
   }
 };
 
 // Controller to Login an existing user
 export const login = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
 
     // validate
     if (!email || !password) {
@@ -85,10 +83,10 @@ export const login = async (req, res) => {
     }
 
     // password validation
-    if (password.length < 6) {
+    if (password.length <= 6) {
       return res.status(401).json({
         success: false,
-        message: "Password must have 6 letters",
+        message: "Password must be more then 8 letters.",
       });
     }
 
@@ -97,12 +95,9 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Credentials",
+        message: "Email Dosen't Exists, Login First.",
       });
     }
-
-    // removing password from response
-    const { password: _, ...userData } = user._doc;
 
     // password matches
     const isMatch = await bcrypt.compare(password, user.password);
@@ -122,26 +117,39 @@ export const login = async (req, res) => {
         expiresIn: "7d",
       },
     );
-    res.json({
+
+    // removing password from response
+    const { password: _, ...userData } = user._doc;
+
+    return res.json({
       success: true,
       accessToken: accessToken,
       message: "Token Created Successfully",
       data: userData,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: error
+      data: error,
     });
   }
 };
 
 // Logic for sending OTP to Forgot password - (NodeMailer)
 export const sendOTPController = async (req, res) => {
-try {
+  try {
     const { email } = req.body;
-    // validate email
+
+    // Validate email
+    if(!email){
+      return res.status(400).json({
+        success: false,
+        message: "Email is Required"
+      })
+    }
+
+    // Check Exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({
@@ -149,28 +157,28 @@ try {
         message: "Email not registered",
       });
     }
-  
+
     // create OTP
     const OTP = Math.floor(1000 + Math.random() * 9000);
-  
+
     // save otp to database
-    user.otp = OTP
-    user.otpExpiry = Date.now() + 10 * 60 * 1000
-    await user.save()
-  
+    user.otp = OTP;
+    user.otpExpiry = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
     // send OTP
-    await sendOTP(email, OTP)
-    res.status(200).json({
+    await sendOTP(email, OTP);
+    return res.status(200).json({
       success: true,
-      message: "OTP sent successfully"
-    })
-} catch (error) {
-  res.status(500).json({
-    success: false,
-    message: "Internal Server Error",
-    data: error
-  })
-}
+      message: "OTP sent successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
 };
 
 // Logic for resetting password
@@ -182,23 +190,23 @@ export const resetPassword = async (req, res) => {
     if (!email || !otp || !password) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required"
+        message: "All fields are required",
       });
     }
 
+    // Check Exists
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
+        message: "User not found",
       });
     }
 
     if (user.otp !== otp) {
       return res.status(400).json({
         success: false,
-        message: "Incorrect OTP"
+        message: "Incorrect OTP",
       });
     }
 
@@ -206,7 +214,7 @@ export const resetPassword = async (req, res) => {
     if (user.otpExpiry < Date.now()) {
       return res.status(400).json({
         success: false,
-        message: "OTP expired"
+        message: "OTP expired",
       });
     }
 
@@ -220,16 +228,15 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Password Reset Successful"
+      message: "Password Reset Successful",
     });
-
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: error
+      data: error,
     });
   }
 };

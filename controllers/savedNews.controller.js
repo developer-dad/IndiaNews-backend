@@ -3,11 +3,30 @@ import SavedNews from "../models/savedNews.model.js";
 // Controller to save a news in Database
 export const saveNews = async (req, res) => {
   try {
-    const { article_id, title, description, image_url, source, link, pubDate, userID } =
-      req.body;
+    const {
+      article_id,
+      title,
+      description,
+      image_url,
+      source,
+      link,
+      pubDate,
+      userID,
+    } = req.body;
+
+    // Validate article_id
+    if (!article_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Article ID is Required",
+      });
+    }
 
     // If news with same article_id present
-    const exists = await SavedNews.findOne({ article_id });
+    const exists = await SavedNews.findOne({
+      article_id,
+      userID: req.user.id,
+    });
     if (exists) {
       return res.status(409).json({
         success: true,
@@ -24,69 +43,79 @@ export const saveNews = async (req, res) => {
       source,
       link,
       pubDate,
-      userID
+      userID: req.user.id,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "News Saved Successfully",
       data: news,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: error
+      data: error,
     });
   }
 };
 
 // Controller to Remove a news from Database
 export const removeNews = async (req, res) => {
-try {
-    const { article_id } = req.params
-  
+  try {
+    const { article_id } = req.params;
+
+    // Validate article_id
+    if (!article_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Article ID is required",
+      });
+    }
+
     // Check if saved news exists with article_id
     const news = await SavedNews.findOne({
-       article_id,
-       userID: req.user.id
-    })
-    if(!news){
+      article_id,
+      userID: req.user.id,
+    });
+    if (!news) {
       return res.status(404).json({
         success: false,
-        message: "News Not Found"
-      })
+        message: "News Not Found",
+      });
     }
-  
+
     // Deleteing News
-    await news.deleteOne()
-    res.status(200).json({
+    await news.deleteOne();
+    return res.status(200).json({
       success: true,
-      message: "Saved News successfully removed"
-    })  
-} catch (error) {
-    res.status(500).json({
+      message: "Saved News successfully removed",
+    });
+  } catch (error) {
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: error
-    })
-}
-}
+      data: error,
+    });
+  }
+};
 
 // Controller to get all the saved News of a User
 export const getSavedNews = async (req, res) => {
- try {
-   const news = await SavedNews.find({ userID: req.user.id }).sort({ createdAt: -1 })
-   res.status(200).json({
-     success: true,
-     message: "All Saved News Fetched",
-     data: news
-   })
- } catch (error) {
-  res.status(500).json({
-    success: false,
-    message: "Internal Server Error",
-    data: error
-  })
- }
-}
+  try {
+    const news = await SavedNews.find({ userID: req.user.id }).sort({
+      createdAt: -1,
+    });
+    return res.status(200).json({
+      success: true,
+      message: "All Saved News Fetched",
+      data: news,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: error,
+    });
+  }
+};
