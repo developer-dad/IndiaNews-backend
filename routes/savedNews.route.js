@@ -1,7 +1,7 @@
 import express from 'express'
 import { removeNews, saveNews } from '../controllers/savedNews.controller.js'
 import { fetchNews } from '../controllers/news.controller.js'
-import { authMiddleware } from '../../../Notes/Backend/middleware/User.middleware.js'
+import { authMiddleware } from '../../../Notes/Backend/middleware/user.middleware.js'
 
 const savedRouter = express.Router()
 
