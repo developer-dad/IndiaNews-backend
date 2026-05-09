@@ -14,7 +14,7 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "https://indianews-flame.vercel.app",
-    "https://news-stack-india.vercel.app/"
+    "https://news-stack-india.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true
